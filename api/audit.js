@@ -1,1 +1,0 @@
-const {db}=require("../lib/db"),{auth}=require("../lib/auth");module.exports=async(req,res)=>{try{auth(req,["admin"]);let s=db();res.json(await s`SELECT a.action,a.detail,a.created_at,u.account_id FROM audit a LEFT JOIN users u ON u.id=a.target_user_id ORDER BY a.created_at DESC LIMIT 100`)}catch(e){res.status(e.status||500).json({error:e.message})}}
