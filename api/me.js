@@ -1,0 +1,1 @@
+const {db}=require("../lib/db"),{auth}=require("../lib/auth");module.exports=async(req,res)=>{try{let p=auth(req),s=db(),r=await s`SELECT account_id,name,email,role,balance,created_at FROM users WHERE id=${p.uid}`;res.json(r[0])}catch(e){res.status(e.status||500).json({error:e.message})}}
