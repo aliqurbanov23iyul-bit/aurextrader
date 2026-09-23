@@ -1,0 +1,6 @@
+module.exports=async(req,res)=>{try{
+const mode=String(req.query.mode||"markets");
+if(mode==="markets"){let syms=["BTC","ETH","SOL","BNB","XRP","ADA","DOGE","AVAX","LINK","DOT","TRX","LTC","ATOM","UNI","NEAR"],r=await fetch("https://api.binance.com/api/v3/ticker/24hr"),d=await r.json(),m=new Map(d.map(x=>[x.symbol,x]));res.setHeader("Cache-Control","s-maxage=10, stale-while-revalidate=20");return res.json(syms.map(s=>{let x=m.get(s+"USDT");return {symbol:s,price:Number(x?.lastPrice||0),change:Number(x?.priceChangePercent||0),volume:x?Number(x.quoteVolume).toLocaleString(undefined,{notation:"compact",maximumFractionDigits:1}):"—"}}))}
+if(mode==="klines"){let symbol=String(req.query.symbol||"BTCUSDT").toUpperCase(),interval=String(req.query.interval||"1h"),allowed=["1m","5m","15m","1h","4h","1d"];if(!/^[A-Z0-9]{5,15}$/.test(symbol)||!allowed.includes(interval))return res.status(400).json({error:"Invalid"});let r=await fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=120`),d=await r.json();if(!r.ok)throw 0;res.setHeader("Cache-Control","s-maxage=10");return res.json(d.map(x=>({time:x[0],open:x[1],high:x[2],low:x[3],close:x[4],volume:x[5]})))}
+return res.status(404).json({error:"Unknown market mode"});
+}catch(e){res.status(502).json({error:"Market data unavailable"})}};
