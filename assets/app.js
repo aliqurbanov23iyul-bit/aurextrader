@@ -18,7 +18,7 @@ const COINS=[
 ];
 const FALLBACK={BTC:64821,ETH:3388,SOL:152.8,BNB:586,XRP:.612,ADA:.452,DOGE:.133,AVAX:36.18,LINK:14.72,DOT:6.28,TRX:.118,LTC:74.92,ATOM:7.44,UNI:9.17,NEAR:5.08};
 function fmt(n){n=Number(n);return n<1?"$"+n.toFixed(4):"$"+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
-async function getMarkets(){try{let r=await fetch("/api/markets");if(!r.ok)throw 0;return await r.json()}catch(e){return COINS.map((c,i)=>({symbol:c[0],price:FALLBACK[c[0]],change:(i%3===0?2.1:i%3===1?.8:-1.2),volume:"Demo"}))}}
+async function getMarkets(){try{let r=await fetch("/api/market?mode=markets");if(!r.ok)throw 0;return await r.json()}catch(e){return COINS.map((c,i)=>({symbol:c[0],price:FALLBACK[c[0]],change:(i%3===0?2.1:i%3===1?.8:-1.2),volume:"Demo"}))}}
 function logo(sym){let c=COINS.find(x=>x[0]===sym);return c?c[2]:""}
 function coinName(sym){let c=COINS.find(x=>x[0]===sym);return c?c[1]:sym}
 async function renderMarkets(){
